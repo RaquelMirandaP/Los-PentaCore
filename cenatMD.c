@@ -44,7 +44,7 @@ struct particle{
 	double vX;
 	double vY;
 	double vZ;
-}part;
+};
 
 // Heading for auxiliar functions
 double randomValue(int type, int rank, int p);
@@ -74,12 +74,17 @@ int main(int argc, char** argv){
 	MPI_Status status;								// Return status for receive
 	int i,j,rounds, initiator, sender, dump_flag, init_flag;			
 	double start_time, end_time;
-
+	
+	
+	printf("picha");
+	
 	// checking the number of parameters
 	if(argc < 5){
 		printf("Error, usage %s <particles per rank> <iterations> <dump flag> <init flag>\n",argv[0]);
 		exit(1);
 	}
+	
+	
 	
 	// getting base number of particles per rank
 	n = atoi(argv[1]);
@@ -145,7 +150,10 @@ int main(int argc, char** argv){
 	// acquiring memory for particle arrays
 	locals = malloc(number * sizeof(struct particle));
 	foreigners = malloc(maxNumber * sizeof(struct particle));
-
+	
+	
+	printf("me cago");
+	
 	// initializing particle positions
 	if(init_flag) {
 		for(j = 0; j < number; j++){
@@ -191,7 +199,9 @@ int main(int argc, char** argv){
 		// cleaning forces in the particles
 		cleanForces(locals,number);
 		foreignNumber = n;
-
+		
+		
+		printf("me cago %d", i);
 		
 		//sending the local particles to the next processor, receiving the incoming foreign particle set and update both of them
 		for(j=0; j<((p-1)/2); j++){ //running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
