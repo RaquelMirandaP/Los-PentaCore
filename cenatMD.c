@@ -95,7 +95,7 @@ int main(int argc, char** argv){
 	//Create MPI type particle 
     const int nitems=13;
     int          blocklengths[13] = {1,1,1,1,1,1,1,1,1,1,1,1,1};
-    MPI_Datatype types[2] = {MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE};
+    MPI_Datatype types[13] = {MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE};
     MPI_Datatype mpi_particle_type;
     MPI_Aint     offsets[13];
 
@@ -132,7 +132,7 @@ int main(int argc, char** argv){
 
 	//compute previous and next processes
 	next=(myRank+1)%p;
-	prev=(myRank-1+p)%p;
+	previous=(myRank-1+p)%p;
 	
 
 
