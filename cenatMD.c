@@ -192,10 +192,10 @@ int main(int argc, char** argv){
 		foreignNumber = n;
 
 		
-		//TO DO: sending the local particles to the next processor, receiving the incoming foreign particle set and update both of them
-		for(i=0; i<((p-1)/2)); i++){ 
+		//sending the local particles to the next processor, receiving the incoming foreign particle set and update both of them
+		for(j=0; j<((p-1)/2)); j++){ //running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
 			
-			if(i==0){
+			if(j==0){
 				MPI_Send(locals,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
 			}
 			else{
@@ -205,7 +205,7 @@ int main(int argc, char** argv){
 			evolve(locals, foreigners, number, foreignNumber);
 		
 		}
-		//TO DO: running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
+		//running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
 
 		
 
@@ -214,7 +214,9 @@ int main(int argc, char** argv){
 
 
 		//TO DO: sending the particles to the initiator
-	
+		int initiator;
+		initiator= (myRank-1+p)%p;
+		MPI_Send(locals,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
 
 		
 		
