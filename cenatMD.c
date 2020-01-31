@@ -195,14 +195,11 @@ int main(int argc, char** argv){
 		//sending the local particles to the next processor, receiving the incoming foreign particle set and update both of them
 		for(j=0; j<((p-1)/2)); j++){ //running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
 			
-			if(j==0){
-				MPI_Send(locals,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
-			}
-			else{
-				MPI_Send(foreigners,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
-			}
+
+			MPI_Send(locals,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
 			MPI_Recv(foreigners,n,mpi_particle_type, previous, tag, MPI_COMM_WORLD, &status);
 			evolve(locals, foreigners, number, foreignNumber);
+			locals=foreigners;
 		
 		}
 		//running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
@@ -215,16 +212,19 @@ int main(int argc, char** argv){
 
 		//TO DO: sending the particles to the initiator
 		int initiator;
-		initiator= (myRank-1+p)%p;
-		MPI_Send(locals,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
+		int orgReciever;
+		initiator= (myRank-((p-1)/2)+p)%p;
+		orgReciever= (myRank+((p-1)/2))%p;
+		
+		MPI_Send(locals,n, mpi_particle_type, initiator, tag, MPI_COMM_WORLD);
+		MPI_Recv(locals,n,mpi_particle_type, orgReciever, tag, MPI_COMM_WORLD, &status);
+		
 
 		
 		
 
 
 		//TO DO: receiving the incoming particles and merging them with the local set, interacting the local set
-		
-	
 		merge(locals,foreigners,number);
 		evolve(locals,locals,number,number);
 
