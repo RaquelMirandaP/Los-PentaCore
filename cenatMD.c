@@ -44,7 +44,7 @@ struct particle{
 	double vX;
 	double vY;
 	double vZ;
-};
+}part;
 
 // Heading for auxiliar functions
 double randomValue(int type, int rank, int p);
@@ -94,24 +94,24 @@ int main(int argc, char** argv){
 	
 	//Create MPI type particle 
     const int nitems=13;
-    int          blocklengths[3] = {1,1,1,1,1,1,1,1,1,1,1,1,1};
+    int          blocklengths[13] = {1,1,1,1,1,1,1,1,1,1,1,1,1};
     MPI_Datatype types[2] = {MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE};
     MPI_Datatype mpi_particle_type;
     MPI_Aint     offsets[13];
 
-    offsets[0] = offsetof(particle, x);
-    offsets[1] = offsetof(particle, y);
-    offsets[2] = offsetof(particle, z);
-    offsets[3] = offsetof(particle, mass);
-    offsets[4] = offsetof(particle, fx);
-    offsets[5] = offsetof(particle, fy);
-    offsets[6] = offsetof(particle, fz);
-    offsets[7] = offsetof(particle, ax);
-    offsets[8] = offsetof(particle, ay);
-    offsets[9] = offsetof(particle, az);
-    offsets[10] = offsetof(particle, vx);
-    offsets[11] = offsetof(particle, vy);
-    offsets[12] = offsetof(particle, vz);
+    offsets[0] = offsetof(part, x);
+    offsets[1] = offsetof(part, y);
+    offsets[2] = offsetof(part, z);
+    offsets[3] = offsetof(part, mass);
+    offsets[4] = offsetof(part, fx);
+    offsets[5] = offsetof(part, fy);
+    offsets[6] = offsetof(part, fz);
+    offsets[7] = offsetof(part, ax);
+    offsets[8] = offsetof(part, ay);
+    offsets[9] = offsetof(part, az);
+    offsets[10] = offsetof(part, vx);
+    offsets[11] = offsetof(part, vy);
+    offsets[12] = offsetof(part, vz);
 
 
     MPI_Type_create_struct(nitems, blocklengths, offsets, types, &mpi_particle_type);
@@ -193,7 +193,7 @@ int main(int argc, char** argv){
 
 		
 		//sending the local particles to the next processor, receiving the incoming foreign particle set and update both of them
-		for(j=0; j<((p-1)/2)); j++){ //running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
+		for(j=0; j<((p-1)/2); j++){ //running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
 			
 
 			MPI_Send(locals,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
