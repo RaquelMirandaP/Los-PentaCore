@@ -97,31 +97,6 @@ int main(int argc, char** argv){
 	MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
 	
-	//Create MPI type particle 
-    
-    /*const int nitems=13;
-    int          blocklengths[13] = {1,1,1,1,1,1,1,1,1,1,1,1,1};
-    MPI_Datatype types[13] = {MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE};
-    MPI_Datatype mpi_particle_type;
-    MPI_Aint     offsets[13];
-
-    offsets[0] = offsetof(part, x);
-    offsets[1] = offsetof(part, y);
-    offsets[2] = offsetof(part, z);
-    offsets[3] = offsetof(part, mass);
-    offsets[4] = offsetof(part, fx);
-    offsets[5] = offsetof(part, fy);
-    offsets[6] = offsetof(part, fz);
-    offsets[7] = offsetof(part, ax);
-    offsets[8] = offsetof(part, ay);
-    offsets[9] = offsetof(part, az);
-    offsets[10] = offsetof(part, vx);
-    offsets[11] = offsetof(part, vy);
-    offsets[12] = offsetof(part, vz);
-
-
-    MPI_Type_create_struct(nitems, blocklengths, offsets, types, &mpi_particle_type);
-    MPI_Type_commit(&mpi_particle_type);	*/
 	
 	
 	
@@ -207,12 +182,10 @@ int main(int argc, char** argv){
 		for(j=0; j<((p-1)/2); j++){ //running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
 			
 
-			/*MPI_Send(locals,n, mpi_particle_type, next, tag, MPI_COMM_WORLD);
-			MPI_Recv(foreigners,n,mpi_particle_type, previous, tag, MPI_COMM_WORLD, &status);*/
 			
 			
-			MPI_Send(locals,number * (sizeof (struct particle)) / sizeof(double), MPI_DOUBLE, next, tag, MPI_COMM_WORLD);
-			MPI_Recv(foreigners,number * (sizeof (struct particle)) / sizeof(double), MPI_DOUBLE, previous, tag, MPI_COMM_WORLD, &status);
+			MPI_Send(locals,number * (sizeof (struct particle)), MPI_BYTE, next, tag, MPI_COMM_WORLD);
+			MPI_Recv(foreigners,number * (sizeof (struct particle)), MPI_BYTE, previous, tag, MPI_COMM_WORLD, &status);
 			
 			
 			evolve(locals, foreigners, number, foreignNumber);
@@ -236,8 +209,8 @@ int main(int argc, char** argv){
 		/*MPI_Send(locals,n, mpi_particle_type, initiator, tag, MPI_COMM_WORLD);
 		MPI_Recv(locals,n,mpi_particle_type, orgReciever, tag, MPI_COMM_WORLD, &status);*/
 		
-		MPI_Send(locals,number * (sizeof (struct particle)) / sizeof(double), MPI_DOUBLE, initiator, tag, MPI_COMM_WORLD);
-		MPI_Recv(locals,number * (sizeof (struct particle)) / sizeof(double), MPI_DOUBLE, orgReciever, tag, MPI_COMM_WORLD, &status);
+		MPI_Send(locals,number * (sizeof (struct particle)), MPI_BYTE, initiator, tag, MPI_COMM_WORLD);
+		MPI_Recv(locals,number * (sizeof (struct particle)), MPI_BYTE, orgReciever, tag, MPI_COMM_WORLD, &status);
 		
 
 		
