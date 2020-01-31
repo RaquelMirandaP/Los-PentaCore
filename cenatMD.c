@@ -189,7 +189,6 @@ int main(int argc, char** argv){
 			
 			
 			evolve(locals, foreigners, number, foreignNumber);
-			locals=foreigners;
 		
 		}
 		//running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
@@ -210,7 +209,7 @@ int main(int argc, char** argv){
 		MPI_Recv(locals,n,mpi_particle_type, orgReciever, tag, MPI_COMM_WORLD, &status);*/
 		
 		MPI_Send(locals,number * (sizeof (struct particle)), MPI_BYTE, initiator, tag, MPI_COMM_WORLD);
-		MPI_Recv(locals,number * (sizeof (struct particle)), MPI_BYTE, orgReciever, tag, MPI_COMM_WORLD, &status);
+		MPI_Recv(foreigners,number * (sizeof (struct particle)), MPI_BYTE, orgReciever, tag, MPI_COMM_WORLD, &status);
 		
 
 		
