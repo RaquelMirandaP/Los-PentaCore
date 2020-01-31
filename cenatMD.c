@@ -76,7 +76,7 @@ int main(int argc, char** argv){
 	double start_time, end_time;
 	
 	
-	printf("picha");
+	printf("inicio");
 	
 	// checking the number of parameters
 	if(argc < 5){
@@ -127,7 +127,7 @@ int main(int argc, char** argv){
 	foreigners = malloc(maxNumber * sizeof(struct particle));
 	
 	
-	printf("me cago");
+	printf("iniciando particulas");
 	
 	// initializing particle positions
 	if(init_flag) {
@@ -176,15 +176,20 @@ int main(int argc, char** argv){
 		foreignNumber = n;
 		
 		
-		printf("me cago %d", i);
+		printf("hola %d", i);
 		
 		//sending the local particles to the next processor, receiving the incoming foreign particle set and update both of them
 		for(j=0; j<((p-1)/2); j++){ //running the algorithm for (p-1)/2 rounds. REMEMBER: call evolve function
 			
 
+			if(j == 0){
+				MPI_Send(locals,number * (sizeof (struct particle)), MPI_BYTE, next, tag, MPI_COMM_WORLD);
+			}
 			
+			else{
+				MPI_Send(foreigners,number * (sizeof (struct particle)), MPI_BYTE, next, tag, MPI_COMM_WORLD);
+			}
 			
-			MPI_Send(locals,number * (sizeof (struct particle)), MPI_BYTE, next, tag, MPI_COMM_WORLD);
 			MPI_Recv(foreigners,number * (sizeof (struct particle)), MPI_BYTE, previous, tag, MPI_COMM_WORLD, &status);
 			
 			
@@ -208,7 +213,7 @@ int main(int argc, char** argv){
 		/*MPI_Send(locals,n, mpi_particle_type, initiator, tag, MPI_COMM_WORLD);
 		MPI_Recv(locals,n,mpi_particle_type, orgReciever, tag, MPI_COMM_WORLD, &status);*/
 		
-		MPI_Send(locals,number * (sizeof (struct particle)), MPI_BYTE, initiator, tag, MPI_COMM_WORLD);
+		MPI_Send(foreigners,number * (sizeof (struct particle)), MPI_BYTE, initiator, tag, MPI_COMM_WORLD);
 		MPI_Recv(foreigners,number * (sizeof (struct particle)), MPI_BYTE, orgReciever, tag, MPI_COMM_WORLD, &status);
 		
 
